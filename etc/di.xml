@@ -5,4 +5,26 @@
                 type="Yireo\EventsLogger\Plugin\LogEvent"
                 sortOrder="1"/>
     </type>
+
+    <type name="Yireo\EventsLogger\Plugin\LogEvent">
+        <arguments>
+            <argument name="logger" xsi:type="object">Yireo\EventsLogger\Logger\Logger</argument>
+            <argument name="config" xsi:type="object">Yireo\EventsLogger\Config\Config\Proxy</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Yireo\EventsLogger\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/events.log</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="Yireo\EventsLogger\Logger\Logger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="name" xsi:type="string">events</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="events" xsi:type="object">Yireo\EventsLogger\Logger\Handler</item>
+            </argument>
+        </arguments>
+    </virtualType>
 </config>

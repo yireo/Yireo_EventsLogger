@@ -3,25 +3,43 @@
 namespace Yireo\EventsLogger\Plugin;
 
 use Magento\Framework\Event\Manager;
-use Yireo\EventsLogger\Logger\Logger;
+use Psr\Log\LoggerInterface;
+use Throwable;
+use Yireo\EventsLogger\Config\Config;
 
 class LogEvent
 {
+    private bool $isLogging = false;
+
     public function __construct(
-        private Logger $logger
-    ){
+        private LoggerInterface $logger,
+        private Config $config
+    ) {
     }
 
     /**
      * @param Manager $subject
-     * @param string $eventName
+     * @param mixed $eventName
      * @param array $data
-     * @return array
+     * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function beforeDispatch(Manager $subject, $eventName, array $data = []): array
+    public function beforeDispatch(Manager $subject, $eventName, array $data = []): void
     {
-        $this->logger->log($eventName);
+        if ($this->isLogging || !is_string($eventName)) {
+            return;
+        }
 
-        return [$eventName, $data];
+        $this->isLogging = true;
+
+        try {
+            if ($this->config->isEnabled()) {
+                $this->logger->debug((string)preg_replace('/[^\x20-\x7E]/', '', $eventName));
+            }
+        } catch (Throwable) {
+            return;
+        } finally {
+            $this->isLogging = false;
+        }
     }
 }
