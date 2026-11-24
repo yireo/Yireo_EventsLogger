@@ -21,6 +21,21 @@ Next, enable this module:
 bin/magento module:enable Yireo_EventsLogger
 ```
 
+### Configuration
+Logging is disabled by default. Enable it in the Admin Panel under **Stores > Configuration > Advanced > Yireo Events Logger**, or via the CLI:
+```bash
+bin/magento config:set yireo_events_logger/general/enabled 1
+```
+
+Every dispatched event is then written to `var/log/events.log`.
+
+### Security notice
+This module is meant for debugging only:
+- A single page request dispatches hundreds of events, so `var/log/events.log` grows quickly. The file is not rotated by this module and can fill up the disk.
+- The log reveals the internal flow of the shop (logins, orders, admin actions).
+
+Do not leave logging enabled in production.
+
 ## Current status
 
 <!-- badges.test.start -->
