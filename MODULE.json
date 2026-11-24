@@ -1,5 +1,10 @@
 {
     "module_name": "Yireo_EventsLogger",
     "composer_name": "yireo/magento2-events-logger",
-    "sequence": []
+    "sequence": [
+        "Magento_Backend",
+        "Magento_Config"
+    ],
+    "phpcs_severity": "6",
+    "phpstan_level": "1"
 }
